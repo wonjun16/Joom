@@ -1,10 +1,6 @@
-<<<<<<< HEAD
-const express = require('express');
-=======
 import express from "express";
 import http from "http";
 import Websocket from "ws";
->>>>>>> 0eba26276d2ddc32b52a5cc50736de078579c6bb
 
 const app = express();
 app.set("view engine", "pug");
@@ -19,11 +15,13 @@ const handleListen = () => console.log(`Listening on http://localhost:3000`);
 const server = http.createServer(app);
 const wss = new Websocket.Server({server});
 
+const sockets = [];
+
 wss.on("connection", (socket) => {
     console.log("Connect with the Brower ✔");
-    socket.send("hello");
+    sockets.push(socket);
     socket.on("message", (message) => {
-        console.log(message);
+        sockets.forEach((soc) => {soc.send(message)});
     });
     socket.on("close", () => {
         console.log("Disconnected from the Browser ✖")
