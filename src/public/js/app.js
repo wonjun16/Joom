@@ -1,19 +1,15 @@
-const SocketForm = document.querySelector("form");
-const SocketUl = document.querySelector("ul");
+const socket = io();
 
-const socket = new WebSocket(`ws://${window.location.host}`);
+const nickDiv = document.getElementById("nick");
+const roomDiv = document.getElementById("room");
 
-SocketForm.addEventListener("submit", (event) => {
+const nickForm = nickDiv.querySelector("form");
+const roomForm = roomDiv.querySelector("form");
+
+roomForm.addEventListener("submit", (event) => {
     event.preventDefault();
-    const input = SocketForm.querySelector('input');
-    socket.send(input.value);
+    const input = roomDiv.querySelector("input");
+    socket.emit("enter_room", input.value, () => console.log("front callback"));
+
     input.value = "";
-});
-
-socket.addEventListener("message", (message) => {
-    console.log("New Message : " + message.data);
-});
-
-socket.addEventListener("close", () => {
-    console.log("Disconnected from the server ✖");
 });
